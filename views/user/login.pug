@@ -1,0 +1,9 @@
+extends ../layout.pug 
+block content 
+    div 
+        form(action="/user/login", method="POST") 
+            input(name="email", type="email", placeholder="Email", required="true")
+            input(name="password", type="password", placeholder="Password", required="true")
+            button(type="submit") login
+        if attempted 
+            p(style="color:red;font-weight: bold;") #{message}

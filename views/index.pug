@@ -1,0 +1,14 @@
+extends layout
+block content 
+    .nav 
+        .navele 
+            a(href="/user/login") login
+        .navele 
+            a(href="/user/signup") signup
+    .form
+        a.formele(href='/form') 
+            h3 View Forms 
+        a.formele(href='/form/create')
+            h3 Create Form
+block links
+    link(rel="stylesheet", href="/css/index.css")

@@ -1,0 +1,29 @@
+body { 
+    margin: 0;
+}
+
+.nav{
+    background-color: firebrick;
+    display:flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    justify-content: flex-end;
+    margin: 50px 0;
+    padding: 5px 5%;
+}
+.navele{
+    padding: 5px;
+    margin: 0 10px;
+    color: white;
+    font-weight: bold;
+    font-size: large;
+    text-decoration: none;
+}
+.navele:hover{
+    color: aqua;
+}
+a, a:hover, a:focus, a:active {
+    text-decoration: none;
+    color: inherit;
+    
+}

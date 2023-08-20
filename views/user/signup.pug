@@ -1,0 +1,10 @@
+extends ../layout.pug 
+block content 
+    div 
+        form(action="/user/signup", method="POST") 
+            input(name="name", type="text", placeholder="Name", required="true")
+            input(name="email", type="email", placeholder="Email", required="true")
+            input(name="password", type="password", placeholder="Password", required="true")
+            button(type="submit") signup
+        if attempted  
+            p(style="color:red;font-weight: bold;") #{message}
