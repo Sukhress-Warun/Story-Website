@@ -1,0 +1,5 @@
+mixin review(comment)
+    div 
+        h4= comment.rating
+        p= comment.desc 
+        p(style="text-align:right;")= "-" + comment.author.name 

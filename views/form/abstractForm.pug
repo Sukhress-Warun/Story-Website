@@ -1,0 +1,7 @@
+mixin abstractForm(form)
+    div 
+        a(href="/form/"+form._id)
+            h3= form.title 
+        p= form.desc 
+        br
+        h5(style="text-align:right;")= "-" + form.author.name

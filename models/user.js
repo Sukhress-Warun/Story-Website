@@ -1,5 +1,7 @@
+// packages
 const mongoose = require('mongoose') 
 
+// schema
 const UserSchema = new mongoose.Schema({
     name: {
         type: String,
@@ -25,18 +27,20 @@ const UserSchema = new mongoose.Schema({
     }],
 })
 
+// hooks
 UserSchema.pre('save', function(next) {
     this.increment();
     return next();
 })
 
+// static-methods
 UserSchema.statics.createUser = async function (name, email, password){
     const response = {
         created: false,
         message: "",
         id: ""
     }
-    const userExist = await this.exists({email:email})
+    const userExist = await this.exists({email: email})
     if(userExist){
         response.message = "email already exist"
         return response
@@ -63,18 +67,39 @@ UserSchema.statics.authenticate = async function (email, password) {
         message: "",
         id: ""
     }
-    const user = await this.findOne({email:email})
-    if(user===null){
+    const user = await this.findOne({email: email})
+    if(user === null){
         response.message = "email doesn't exist"
         return response
     }
-    if(user.password === password){
-        response.auth = true
-        response.message = "ok"
-        response.id = user._id
-    }
-    else{
+    if(user.password !== password){
         response.message = "incorrect password"
+        return response
+    }
+    response.auth = true
+    response.message = "ok"
+    response.id = user._id
+    return response
+}
+
+UserSchema.statics.addForm = async function (author, formId){
+    const response = {
+        added: false,
+        message: ""
+    }
+    try{
+        const user = await this.findById(author)
+        if(user === null){
+            response.message = "user doesn't exist"
+            return response
+        }
+        user.forms.push(formId)
+        await user.save()
+        response.added = true
+        response.message = "ok"
+    }
+    catch(err){
+        response.message = "server error " + err
     }
     return response
 }

@@ -1,0 +1,16 @@
+extends ../layout
+include ../review/review.pug
+include ../nav.pug
+block content 
+    - const elements = [{name: "home", href: "/"}]
+    +navBar(elements)
+    if !retrieved
+        p  #{message} 
+    else 
+        h1 #{form.title}
+        br
+        p #{form.desc} 
+        br 
+        h3(style="text-align:right;")= "-" + form.author.name
+        for i in form.reviews 
+            +review(i)

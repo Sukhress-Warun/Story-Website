@@ -19,7 +19,7 @@ router.get('/signup', allowOnlyUnauth, async (req, res) => {
     return res.render("user/signup.pug",{attempted: false})
 })
 
-router.post('/signup', async (req, res) => {
+router.post('/signup', allowOnlyUnauth, async (req, res) => {
     let name = req.body.name
     let email = req.body.email
     let password = req.body.password
@@ -40,7 +40,7 @@ router.get('/login', allowOnlyUnauth, async (req, res) => {
     return res.render("user/login.pug",{attempted: false})
 })
 
-router.post("/login", async (req, res) => {
+router.post("/login", allowOnlyUnauth, async (req, res) => {
     let email = req.body.email
     let password = req.body.password
     const response = await User.authenticate(email, password)
