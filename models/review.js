@@ -17,15 +17,15 @@ const ReviewSchema = new mongoose.Schema({
         ref: 'User',
         required: true
     },
-    form: {
+    story: {
         type: mongoose.SchemaTypes.ObjectId,
-        ref: 'Form',
+        ref: 'Story',
         required: true
     }
 })
 
 // static-methods
-ReviewSchema.statics.createReview = async function(formId, authorId, rating, desc){
+ReviewSchema.statics.createReview = async function(storyId, authorId, rating, desc){
     const response = {
         created: false,
         message: "",
@@ -36,7 +36,7 @@ ReviewSchema.statics.createReview = async function(formId, authorId, rating, des
             rating: rating,
             desc: desc,
             author: authorId,
-            form: formId
+            story: storyId
         })
         response.created = true
         response.message = "ok"

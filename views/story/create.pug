@@ -1,11 +1,11 @@
 extends ../layout.pug 
 block content 
     div 
-        form(action="/form/create", method="POST") 
+        form(action="/story/create", method="POST") 
             input(name="title", type="text", placeholder="Title", required="true")
             br
-            input(name="desc", type="text", placeholder="Description", required="true")
+            input(name="content", type="text", placeholder="your story", required="true")
             br
-            button(type="submit") create
+            button(type="submit") post
         if attempted  
             p(style="color:red;font-weight: bold;") #{message}

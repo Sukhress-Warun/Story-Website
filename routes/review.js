@@ -5,7 +5,7 @@ const express = require('express')
 const router = express.Router()
 
 // models
-const Form = require('../models/form')
+const Story = require('../models/story')
 const User = require('../models/user')
 const Review = require('../models/review')
 
@@ -13,24 +13,24 @@ const Review = require('../models/review')
 const {allowOnlyAuth} = require('../sessions')
 
 // routes /review/
-router.post('/form/:id', allowOnlyAuth, async (req, res) => {
-    let formId = req.params.id
+router.post('/story/:id', allowOnlyAuth, async (req, res) => {
+    let storyId = req.params.id
     let userId = req.session.user.id
-    const hasRated = await User.hasRatedForm(userId, formId)
+    const hasRated = await User.hasRatedStory(userId, storyId)
     // console.log(hasRated)
     if(!hasRated.info || hasRated.owner || hasRated.rated){
         // not eligible , to know
-        return res.redirect('/form/' + formId)
+        return res.redirect('/story/' + storyId)
     }
 
     // eligible
     let desc = req.body.desc
     let rating = Number(req.body.rating)
-    const reviewResponse = await Review.createReview(formId, userId, rating, desc)
+    const reviewResponse = await Review.createReview(storyId, userId, rating, desc)
     // console.log(reviewResponse)
     if(!reviewResponse.created){
         // not created , to retry
-        return res.redirect('/form/' + formId)
+        return res.redirect('/story/' + storyId)
     }
 
     const userResponse = await User.addReview(userId, reviewResponse.id)
@@ -44,25 +44,25 @@ router.post('/form/:id', allowOnlyAuth, async (req, res) => {
             
         }
         // deleted or not but retry
-        return res.redirect('/form/' + formId)
+        return res.redirect('/story/' + storyId)
     }
 
-    //added to user so update form
-    const formResponse = await Form.addReview(formId, reviewResponse.id)
-    // console.log(formResponse)
-    if(!formResponse.added){
-        // not added to form so delete
+    //added to user so update story
+    const storyResponse = await Story.addReview(storyId, reviewResponse.id)
+    // console.log(storyResponse)
+    if(!storyResponse.added){
+        // not added to story so delete
         const ReviewdeleteResponse2 = await Review.deleteReview(reviewResponse.id)
         if(!ReviewdeleteResponse2.deleted){
             console.log("unused review is present in database & exists in user object's reviews array too, id: " + reviewResponse.id)
             console.log(ReviewdeleteResponse2)      
         }
         // deleted or not but retry
-        return res.redirect('/form/' + formId)
+        return res.redirect('/story/' + storyId)
     }
     // success
     // console.log("success")
-    return res.redirect('/form/' + formId)
+    return res.redirect('/story/' + storyId)
 })
 
 module.exports = router

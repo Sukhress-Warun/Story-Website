@@ -17,9 +17,9 @@ const UserSchema = new mongoose.Schema({
         type: String,
         required: true
     },
-    forms: [{
+    stories: [{
         type: mongoose.SchemaTypes.ObjectId,
-        ref: 'Form'
+        ref: 'Story'
     }],
     reviews: [{
         type: mongoose.SchemaTypes.ObjectId,
@@ -82,7 +82,7 @@ UserSchema.statics.authenticate = async function (email, password) {
     return response
 }
 
-UserSchema.statics.addForm = async function (author, formId){
+UserSchema.statics.addStory = async function (author, storyId){
     const response = {
         added: false,
         message: ""
@@ -93,7 +93,7 @@ UserSchema.statics.addForm = async function (author, formId){
             response.message = "user doesn't exist"
             return response
         }
-        user.forms.push(formId)
+        user.stories.push(storyId)
         await user.save()
         response.added = true
         response.message = "ok"
@@ -104,7 +104,7 @@ UserSchema.statics.addForm = async function (author, formId){
     return response
 }
 
-UserSchema.statics.hasRatedForm = async function(userId, formId){
+UserSchema.statics.hasRatedStory = async function(userId, storyId){
     const response = {
         info: false,
         message: "",
@@ -113,9 +113,9 @@ UserSchema.statics.hasRatedForm = async function(userId, formId){
     }
     try{
         const user = await this.findById(userId)
-        if(user.forms.length >= 1){
-            let foundOwning = user.forms.find((ele) => {
-                return (ele.toString() === formId.toString())
+        if(user.stories.length >= 1){
+            let foundOwning = user.stories.find((ele) => {
+                return (ele.toString() === storyId.toString())
             })
             if(foundOwning !== undefined){
                 response.owner = true
@@ -124,7 +124,7 @@ UserSchema.statics.hasRatedForm = async function(userId, formId){
             }
         }
         if(!response.owner){
-            await user.populate("reviews", "form")
+            await user.populate("reviews", "story")
             if(user.reviews.length <= 0){
                 response.rated = false
                 response.info = true
@@ -132,7 +132,7 @@ UserSchema.statics.hasRatedForm = async function(userId, formId){
             }
             else{
                 let foundRating = user.reviews.find((ele) => {
-                    return (ele.form.toString() === formId.toString())
+                    return (ele.story.toString() === storyId.toString())
                 })
                 if(foundRating !== undefined){
                     response.rated = true

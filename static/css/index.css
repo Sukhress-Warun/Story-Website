@@ -1,4 +1,4 @@
-.form{
+.story{
     display: flex;
     flex-direction: row;
     flex-wrap: nowrap;
@@ -8,7 +8,7 @@
     margin: 100px 0;
 }
 
-.formele{
+.storyele{
     width: 45%;
     height: 90%;
     text-align: center;
@@ -20,11 +20,11 @@
 
 }
 
-.formele:hover{
+.storyele:hover{
     color: aqua;
 }
 
-.formele h3{
+.storyele h3{
     position: absolute;
     left: 50%;
     top: 50%;

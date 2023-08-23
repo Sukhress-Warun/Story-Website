@@ -1,9 +1,3 @@
-// todo major change in website
-/* 
-todo - entity 'form' changes to 'story', schema changes accordingly
-todo - entities 'review', 'user' also changes accordingly 
-todo - entire codebase changes so that this website is used to post stories, get ratings,reviews from other users ...
-*/       
 // environment
 require("dotenv").config()
 
@@ -36,7 +30,7 @@ app.use(session({
   resave: false,
   saveUninitialized: true,
   cookie: {
-    maxAge: 120000
+    maxAge: 300000
   }
 }))
 
@@ -45,12 +39,12 @@ app.use(session({
 
 // importing routes
 const user = require('./routes/user')
-const form = require('./routes/form')
+const story = require('./routes/story')
 const review = require('./routes/review')
 
 // adding routes
 app.use('/user', user)
-app.use('/form', form)
+app.use('/story', story)
 app.use('/review', review)
 
 // home route

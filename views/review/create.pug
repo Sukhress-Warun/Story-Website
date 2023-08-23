@@ -1,6 +1,6 @@
-mixin createReview(form)
+mixin createReview(story)
     div 
-        form(action="/review/form/"+form._id, method="POST") 
+        form(action="/review/story/"+story._id, method="POST") 
             label(for="rating") Rating 
             select(name="rating") 
                 option(value="5", selected="true") 5 

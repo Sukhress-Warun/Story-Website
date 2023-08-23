@@ -8,25 +8,24 @@ block content
     if !retrieved
         p  #{message} 
     else 
-        h1 #{form.title}
-        br
-        p #{form.desc} 
-        br 
-        p Overall Rating : #{averageRating}
-        br 
-        h3(style="text-align:right;")= "-" + form.author.name
+        div
+            h1 #{story.title}
+            br
+            p #{story.content} 
+            br 
+            p Overall Rating : #{averageRating}
+            br 
+            h3(style="text-align:right;")= "-" + story.author.name
         if userState.auth 
             if userState.owner 
-                p you are the owner of this form 
-                br
-                p you can't submit a review 
+                p you are the author of this story so, you can't submit a review 
             else 
                 if !userState.rated
-                    +createReview(form)
+                    +createReview(story)
                 else 
                     h3 your review 
                     +review(userState.review)
         else 
             h3 login to submit a review
-        for i in form.reviews 
+        for i in story.reviews 
             +review(i)

@@ -1,11 +1,11 @@
 extends ../layout
 include ../nav.pug
-include abstractForm.pug 
+include abstractStory.pug 
 block content 
     - const elements = [{name: "home", href: "/"}]
     +navBar(elements)
     if retrieved
-        for i in forms 
-            +abstractForm(i)
+        for i in stories 
+            +abstractStory(i)
     else 
         p #{message}

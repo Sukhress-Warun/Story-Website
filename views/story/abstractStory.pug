@@ -1,0 +1,7 @@
+mixin abstractStory(story)
+    div 
+        a(href="/story/"+story._id)
+            h3= story.title 
+        p= story.content 
+        br
+        h5(style="text-align:right;")= "-" + story.author.name

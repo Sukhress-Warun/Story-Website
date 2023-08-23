@@ -2,12 +2,12 @@
 const mongoose = require('mongoose') 
 
 // schema
-const FormSchema = new mongoose.Schema({
+const StorySchema = new mongoose.Schema({
     title: {
         type: String,
         required: true
     },
-    desc: {
+    content: {
         type: String,
         required: true
     },
@@ -23,32 +23,32 @@ const FormSchema = new mongoose.Schema({
 })
 
 // hooks
-FormSchema.pre('save', function(next) {
+StorySchema.pre('save', function(next) {
     this.increment();
     return next();
 })
 
 // static-methods
-FormSchema.statics.createForm = async function(title, desc, author){
+StorySchema.statics.createStory = async function(title, content, author){
     const response = {
         created: false,
         message: "",
         id: ""
     }
-    const formExist = await this.exists({title: title, author: author}) // * can use user model to reduce query time but, need to populate user object's fields 
-    if(formExist){
+    const storyExist = await this.exists({title: title, author: author}) // * can use user model to reduce query time but, need to populate user object's fields 
+    if(storyExist){
         response.message = "you used this title already"
         return response
     }
     try{
-        const form = await this.create({
+        const story = await this.create({
             title: title,
-            desc: desc,
+            content: content,
             author: author
         })
         response.created = true
         response.message = "ok"
-        response.id = form._id
+        response.id = story._id
     }
     catch(err){
         response.message = "server error " + err
@@ -56,18 +56,18 @@ FormSchema.statics.createForm = async function(title, desc, author){
     return response
 }
 
-FormSchema.statics.deleteForm = async function(formId){
+StorySchema.statics.deleteStory = async function(storyId){
     const response = {
         deleted: false,
         message: ""
     }
-    const formExist = await this.exists({_id: formId})
-    if(!formExist){
-        response.message = "form doesn't exist"
+    const storyExist = await this.exists({_id: storyId})
+    if(!storyExist){
+        response.message = "story doesn't exist"
         return response
     }
     try{
-        await this.deleteOne({_id: formId})
+        await this.deleteOne({_id: storyId})
         response.deleted = true
         response.message = "ok"
     }
@@ -77,40 +77,40 @@ FormSchema.statics.deleteForm = async function(formId){
     return response
 }
 
-FormSchema.statics.getAllForms = async function(limit){
+StorySchema.statics.getAllStories = async function(limit){
     const response = {
         retrieved: false,
         message: "",
-        forms: []
+        stories: []
     }
-    const forms = await this.find({}).sort({_id: -1}).limit(limit).populate("author", "name")
-    if(forms.length == 0){
-        response.message = "no forms exist"
+    const stories = await this.find({}).sort({_id: -1}).limit(limit).populate("author", "name")
+    if(stories.length == 0){
+        response.message = "no stories exist"
         return response
     }
     response.retrieved = true
     response.message = "ok"
-    response.forms = forms
+    response.stories = stories
     return response
 }
 
-FormSchema.statics.getFullForm = async function(formId){
+StorySchema.statics.getStory = async function(storyId){
     const response = {
         retrieved: false,
         message: "",
-        form: null
+        story: null
     }
     try{
-        const formExist = await this.exists({_id: formId})
-        if(!formExist){
-            response.message = "form doesn't exist"
+        const storyExist = await this.exists({_id: storyId})
+        if(!storyExist){
+            response.message = "story doesn't exist"
             return response
         }
-        const form = await this.findById(formId).populate("author", "name _id").populate("reviews", "-form")
-        await form.populate("reviews.author", "name _id") 
+        const story = await this.findById(storyId).populate("author", "name _id").populate("reviews", "-story")
+        await story.populate("reviews.author", "name _id") 
         response.retrieved = true
         response.message = "ok"
-        response.form = form
+        response.story = story
         return response
     }
     catch(err){
@@ -126,19 +126,19 @@ FormSchema.statics.getFullForm = async function(formId){
 }
 
 // * if more users try to submit then , more failures would occur 
-FormSchema.statics.addReview = async function(formId, reviewId){
+StorySchema.statics.addReview = async function(storyId, reviewId){
     const response = {
         added: false,
         message: ""
     }
     try{
-        const form = await this.findById(formId)
-        if(form === null){
-            response.message = "form doesn't exist"
+        const story = await this.findById(storyId)
+        if(story === null){
+            response.message = "story doesn't exist"
             return response
         }
-        form.reviews.push(reviewId)
-        await form.save()
+        story.reviews.push(reviewId)
+        await story.save()
         response.added = true
         response.message = "ok"
     }
@@ -148,4 +148,4 @@ FormSchema.statics.addReview = async function(formId, reviewId){
     return response 
 }
 
-module.exports = mongoose.model('Form', FormSchema)
+module.exports = mongoose.model('Story', StorySchema)

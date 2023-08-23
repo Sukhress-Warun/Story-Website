@@ -3,10 +3,10 @@ include nav.pug
 block content 
     - const elements = [{name: "login", href: "/user/login"}, {name: "signup", href: "/user/signup"}, {name: "signout", href: "/user/signout"}]
     +navBar(elements)
-    .form
-        a.formele(href='/form') 
-            h3 View Forms 
-        a.formele(href='/form/create')
-            h3 Create Form
+    .story
+        a.storyele(href='/story') 
+            h3 View stories 
+        a.storyele(href='/story/create')
+            h3 Post Story
 block links
     link(rel="stylesheet", href="/css/index.css")
