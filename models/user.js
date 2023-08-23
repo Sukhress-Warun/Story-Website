@@ -1,5 +1,5 @@
 // packages
-const mongoose = require('mongoose') 
+const mongoose = require('mongoose')
 
 // schema
 const UserSchema = new mongoose.Schema({
@@ -102,6 +102,77 @@ UserSchema.statics.addForm = async function (author, formId){
         response.message = "server error " + err
     }
     return response
+}
+
+UserSchema.statics.hasRatedForm = async function(userId, formId){
+    const response = {
+        info: false,
+        message: "",
+        owner: false,
+        rated: false
+    }
+    try{
+        const user = await this.findById(userId)
+        if(user.forms.length >= 1){
+            let foundOwning = user.forms.find((ele) => {
+                return (ele.toString() === formId.toString())
+            })
+            if(foundOwning !== undefined){
+                response.owner = true
+                response.info = true
+                return response
+            }
+        }
+        if(!response.owner){
+            await user.populate("reviews", "form")
+            if(user.reviews.length <= 0){
+                response.rated = false
+                response.info = true
+                return response
+            }
+            else{
+                let foundRating = user.reviews.find((ele) => {
+                    return (ele.form.toString() === formId.toString())
+                })
+                if(foundRating !== undefined){
+                    response.rated = true
+                    response.info = true
+                    return response
+                }
+                else{
+                    response.rated = false
+                    response.info = true
+                    return response
+                }
+            }
+        }
+    }
+    catch(err){
+        response.message = "server error " + err
+        return response
+    }
+}
+
+UserSchema.statics.addReview = async function(userId, reviewId){
+    const response = {
+        added: false,
+        message: ""
+    }
+    try{
+        const user = await this.findById(userId)
+        if(user === null){
+            response.message = "user doesn't exist"
+            return response
+        }
+        user.reviews.push(reviewId)
+        await user.save()
+        response.added = true
+        response.message = "ok"
+    }
+    catch(err){
+        response.message = "server error " + err
+    }
+    return response 
 }
 
 module.exports = mongoose.model('User', UserSchema)

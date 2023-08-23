@@ -40,14 +40,16 @@ app.use(session({
 // importing routes
 const user = require('./routes/user')
 const form = require('./routes/form')
+const review = require('./routes/review')
 
 // adding routes
 app.use('/user', user)
 app.use('/form', form)
+app.use('/review', review)
 
 // home route
 app.get('/', async (req, res)=>{
-    return res.render('index')
+    return res.render('index.pug')
 })
 
 // listen on port

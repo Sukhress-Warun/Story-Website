@@ -2,6 +2,7 @@
 const mongoose = require('mongoose') 
 
 // schema
+// todo refactor form to post everywhere in this project
 const FormSchema = new mongoose.Schema({
     title: {
         type: String,
@@ -35,7 +36,7 @@ FormSchema.statics.createForm = async function(title, desc, author){
         message: "",
         id: ""
     }
-    const formExist = await this.exists({title: title, author: author})
+    const formExist = await this.exists({title: title, author: author}) // * can use user model to reduce query time but, need to populate user object's fields 
     if(formExist){
         response.message = "you used this title already"
         return response
@@ -94,20 +95,20 @@ FormSchema.statics.getAllForms = async function(limit){
     return response
 }
 
-FormSchema.statics.getForm = async function(formId){
+FormSchema.statics.getFullForm = async function(formId){
     const response = {
         retrieved: false,
         message: "",
         form: null
     }
-    ///ObjectId = require('mongoose').Types.ObjectId;  function isObjectIdValid(id) {    if (ObjectId.isValid(id)) {     if (String(new ObjectId(id)) === id) {        return true      } else {        return false      }    } else {      return false    }  }
     try{
         const formExist = await this.exists({_id: formId})
         if(!formExist){
             response.message = "form doesn't exist"
             return response
         }
-        const form = await this.findById(formId).populate("author", "name").populate("reviews", "-form").populate("reviews.author", "name")
+        const form = await this.findById(formId).populate("author", "name _id").populate("reviews", "-form")
+        await form.populate("reviews.author", "name _id") 
         response.retrieved = true
         response.message = "ok"
         response.form = form
@@ -123,6 +124,29 @@ FormSchema.statics.getForm = async function(formId){
             return response
         }
     }
+}
+
+// * if more users try to submit then , more failures would occur 
+FormSchema.statics.addReview = async function(formId, reviewId){
+    const response = {
+        added: false,
+        message: ""
+    }
+    try{
+        const form = await this.findById(formId)
+        if(form === null){
+            response.message = "form doesn't exist"
+            return response
+        }
+        form.reviews.push(reviewId)
+        await form.save()
+        response.added = true
+        response.message = "ok"
+    }
+    catch(err){
+        response.message = "server error " + err
+    }
+    return response 
 }
 
 module.exports = mongoose.model('Form', FormSchema)

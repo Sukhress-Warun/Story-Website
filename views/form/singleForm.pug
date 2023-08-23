@@ -1,5 +1,6 @@
 extends ../layout
-include ../review/review.pug
+include ../review/create.pug
+include review.pug
 include ../nav.pug
 block content 
     - const elements = [{name: "home", href: "/"}]
@@ -11,6 +12,21 @@ block content
         br
         p #{form.desc} 
         br 
+        p Overall Rating : #{averageRating}
+        br 
         h3(style="text-align:right;")= "-" + form.author.name
+        if userState.auth 
+            if userState.owner 
+                p you are the owner of this form 
+                br
+                p you can't submit a review 
+            else 
+                if !userState.rated
+                    +createReview(form)
+                else 
+                    h3 your review 
+                    +review(userState.review)
+        else 
+            h3 login to submit a review
         for i in form.reviews 
             +review(i)

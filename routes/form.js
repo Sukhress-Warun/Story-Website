@@ -45,8 +45,46 @@ router.get('/', async (req, res) => {
 
 router.get('/:id', async (req, res) => {
     let formId = req.params.id
-    const formResponse = await Form.getForm(formId)
-    return res.render("form/singleForm.pug",{retrieved: formResponse.retrieved, message: formResponse.message, form: formResponse.form})
+    // * getting single form can give few reviews instead of all , but its must to give review of requesting user. to fix 2 db access required
+    const formResponse = await Form.getFullForm(formId)
+    // todo calculate avg rating efficiently , it calculates for every reqst's every review . 
+    let averageRating = 0
+    if(formResponse.retrieved){
+        for(i = 0 ; i < formResponse.form.reviews.length ; i++){
+            averageRating += Number(formResponse.form.reviews[i].rating)
+        }
+        averageRating /= (formResponse.form.reviews.length >= 1) ? formResponse.form.reviews.length : 1
+    }
+    const userState = {
+        auth: false,
+        id: "",
+        owner: false,
+        rated: false,
+        review: null
+    }
+    if(req.session.user !== undefined){
+        userState.auth = true
+        userState.id = req.session.user.id
+        if(formResponse.retrieved){
+            if(formResponse.form.author._id.equals(userState.id)){
+                userState.owner = true
+            }
+            else{
+                let i
+                for(i = 0 ; i < formResponse.form.reviews.length ; i++){
+                    if(formResponse.form.reviews[i].author._id.equals(userState.id)){
+                        userState.rated = true
+                        userState.review = formResponse.form.reviews[i]
+                        break
+                    }
+                }
+                if(userState.rated){
+                    formResponse.form.reviews.splice(i, 1)
+                }
+            }
+        }
+    }
+    return res.render("form/singleForm.pug",{retrieved: formResponse.retrieved, message: formResponse.message, form: formResponse.form, averageRating: averageRating, userState: userState})
 })
 
 module.exports = router

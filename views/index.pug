@@ -1,7 +1,7 @@
 extends layout
 include nav.pug
 block content 
-    - const elements = [{name: "login", href: "/user/login"}, {name: "signup", href: "/user/signup"}]
+    - const elements = [{name: "login", href: "/user/login"}, {name: "signup", href: "/user/signup"}, {name: "signout", href: "/user/signout"}]
     +navBar(elements)
     .form
         a.formele(href='/form') 

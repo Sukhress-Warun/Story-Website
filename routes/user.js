@@ -8,7 +8,7 @@ const router = express.Router()
 const User = require('../models/user')
 
 // sessions middlewares
-const {allowOnlyUnauth} = require('../sessions')
+const {allowOnlyUnauth, allowOnlyAuth} = require('../sessions')
 
 // routes /user/
 router.get('/', async (req, res) => {
@@ -54,6 +54,11 @@ router.post("/login", allowOnlyUnauth, async (req, res) => {
     else{
         return res.render('user/login.pug',{attempted: true, message: response.message})
     }
+})
+
+router.get("/signout", allowOnlyAuth, async (req, res) => {
+    req.session.destroy()
+    res.redirect('/')
 })
 
 module.exports = router
