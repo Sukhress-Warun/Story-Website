@@ -2,7 +2,6 @@
 const mongoose = require('mongoose') 
 
 // schema
-// todo refactor form to post everywhere in this project
 const FormSchema = new mongoose.Schema({
     title: {
         type: String,

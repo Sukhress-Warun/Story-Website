@@ -1,3 +1,9 @@
+// todo major change in website
+/* 
+todo - entity 'form' changes to 'story', schema changes accordingly
+todo - entities 'review', 'user' also changes accordingly 
+todo - entire codebase changes so that this website is used to post stories, get ratings,reviews from other users ...
+*/       
 // environment
 require("dotenv").config()
 
