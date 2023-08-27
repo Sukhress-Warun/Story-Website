@@ -1,5 +1,7 @@
 body { 
     margin: 0;
+    width: 99%;
+    padding: 30px 0.5%;
 }
 
 .nav{

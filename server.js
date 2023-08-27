@@ -49,7 +49,7 @@ app.use('/review', review)
 
 // home route
 app.get('/', async (req, res)=>{
-    return res.render('index.pug')
+  return res.render('index.pug',{auth: req.session.user !== undefined, id: ((req.session.user !== undefined) ? req.session.user.id : null)})
 })
 
 // listen on port

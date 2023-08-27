@@ -5,7 +5,9 @@ block content
     - const elements = [{name: "home", href: "/"}]
     +navBar(elements)
     if retrieved
+        h1(style="text-align:center;") stories
         for i in stories 
-            +abstractStory(i)
+            +abstractStory(i, true)
+            hr
     else 
         p #{message}

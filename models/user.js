@@ -17,6 +17,10 @@ const UserSchema = new mongoose.Schema({
         type: String,
         required: true
     },
+    about: {
+        type: String,
+        required: true
+    },
     stories: [{
         type: mongoose.SchemaTypes.ObjectId,
         ref: 'Story'
@@ -34,7 +38,7 @@ UserSchema.pre('save', function(next) {
 })
 
 // static-methods
-UserSchema.statics.createUser = async function (name, email, password){
+UserSchema.statics.createUser = async function (name, about, email, password){
     const response = {
         created: false,
         message: "",
@@ -48,6 +52,7 @@ UserSchema.statics.createUser = async function (name, email, password){
     try{
         const user = await this.create({
             name: name,
+            about: about,
             email: email,
             password: password
         })
@@ -82,6 +87,82 @@ UserSchema.statics.authenticate = async function (email, password) {
     return response
 }
 
+UserSchema.statics.getUser = async function (userId){
+    const response = {
+        info: false,
+        message: "",
+        user: null
+    }
+    const user = await this.findById(userId)
+    if(user === null){
+        response.message = "user doesn't exist"
+        return response
+    }
+    response.info = true
+    response.message = "ok"
+    response.user = {
+        name: user.name,
+        about: user.about 
+    }
+    return response
+}
+
+UserSchema.statics.updateUser = async function (userId, name, about, password){
+    const response = {
+        info: false,
+        message: "",
+        updated: false,
+        updateMessage: "",
+        name: "",
+        about: "" 
+    }
+    try{
+        const user = await this.findById(userId)
+        if(user === null){
+            response.message = "user doesn't exist"
+            return response
+        }
+        
+        if(user.password !== password){
+            response.info = true
+            response.updateMessage = "incorrect password"
+            response.name = user.name
+            response.about = user.about
+            return response
+        }
+        let changed = false
+        if(name.trim() !== "" && user.name != name){
+            user.name = name
+            changed = true
+        }
+        if(about.trim() !== "" && user.about != about){
+            user.about = about
+            changed = true
+        }
+        if(changed){
+            await user.save()
+            response.info = true
+            response.updateMessage = "changed successfully"
+            response.updated = true
+            response.name = user.name
+            response.about = user.about
+            return response
+        }
+        else{
+            response.info = true
+            response.name = user.name
+            response.about = user.about
+            response.updateMessage = "not changed"
+            return response
+        }
+    }
+    catch(err){
+        response.message = "server error " + err
+        return response
+    }
+
+}
+
 UserSchema.statics.addStory = async function (author, storyId){
     const response = {
         added: false,
@@ -104,12 +185,13 @@ UserSchema.statics.addStory = async function (author, storyId){
     return response
 }
 
-UserSchema.statics.hasRatedStory = async function(userId, storyId){
+UserSchema.statics.hasRatedStory = async function(userId, storyId, getReview){
     const response = {
         info: false,
         message: "",
         owner: false,
-        rated: false
+        rated: false,
+        review: null
     }
     try{
         const user = await this.findById(userId)
@@ -124,7 +206,7 @@ UserSchema.statics.hasRatedStory = async function(userId, storyId){
             }
         }
         if(!response.owner){
-            await user.populate("reviews", "story")
+            await user.populate("reviews")
             if(user.reviews.length <= 0){
                 response.rated = false
                 response.info = true
@@ -136,6 +218,11 @@ UserSchema.statics.hasRatedStory = async function(userId, storyId){
                 })
                 if(foundRating !== undefined){
                     response.rated = true
+                    if(getReview){
+                        user.reviews = [foundRating]
+                        await user.populate("reviews.author", "name _id")
+                        response.review = user.reviews[0]
+                    }
                     response.info = true
                     return response
                 }
@@ -173,6 +260,97 @@ UserSchema.statics.addReview = async function(userId, reviewId){
         response.message = "server error " + err
     }
     return response 
+}
+
+UserSchema.statics.deleteReview = async function(userId, reviewId){
+    const response = {
+        deleted: false,
+        message: ""
+    }
+    try{
+        const user = await this.findById(userId)
+        if(user === null){
+            response.message = "user doesn't exist"
+            return response
+        }
+        let index = user.reviews.indexOf(reviewId)
+        if(index === -1){
+            response.message = "review doesn't exist"
+            return response
+        }
+        user.reviews.splice(index, 1)
+        await user.save()
+        response.deleted = true
+        response.message = "ok"
+    }
+    catch(err){
+        response.message = "server error " + err
+    }
+    return response 
+}
+
+UserSchema.statics.getAboutUser = async function (userId){
+    const response = {
+        retrieved: false,
+        message: "",
+        aboutUser: {
+            name: "",
+            about: "",
+            stories: []
+        }
+    }
+    try{
+        const userExist = await this.exists({_id: userId})
+        if(!userExist){
+            response.message = "user doesn't exist"
+            return response
+        }
+        const user = await this.findById(userId).populate("stories", "-reviews -content -author")
+        user.stories.reverse()
+        response.retrieved = true
+        response.message = "ok"
+        response.aboutUser.name = user.name
+        response.aboutUser.about = user.about
+        response.aboutUser.stories = user.stories
+        return response
+    }
+    catch(err){
+        if(err.name === "CastError"){
+            response.message = "invalid id"
+            return response
+        }
+        else{
+            response.message = "server error " + err
+            return response
+        }
+    }
+}
+
+UserSchema.statics.getReviews = async function (userId){
+    const response = {
+        retrieved: false,
+        message: "",
+        reviews: null
+    }
+    try{
+        const user = await this.findById(userId)
+        if(user === null){
+            response.message = "user doesn't exist"
+            return response
+        }
+        await user.populate("reviews", "-author")
+        await user.populate("reviews.story", "-content -reviews")
+        await user.populate("reviews.story.author", "name _id")
+        user.reviews.reverse()
+        response.reviews = user.reviews
+        response.retrieved = true
+        response.message = "ok"
+        return response
+    }
+    catch(err){
+        response.message = "server error " + err
+        return response
+    }
 }
 
 module.exports = mongoose.model('User', UserSchema)

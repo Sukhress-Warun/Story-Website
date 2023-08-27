@@ -1,0 +1,17 @@
+extends ../layout
+include ../nav.pug
+block content 
+    - const elements = [{name: "home", href: "/"}]
+    +navBar(elements)
+    if info
+        div 
+            form(action="/user/edit", method="POST") 
+                input(name="name", type="text", value=name, placeholder="Name")
+                input(name="about", type="text", value=about, placeholder="About yourself")
+                label(for="password") verify with password
+                input(name="password", type="password", placeholder="Password", required="true")
+                button(type="submit") Update
+        if attempted 
+            p #{attemptMessage}
+    else
+        p #{message}

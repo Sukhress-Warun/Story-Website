@@ -1,8 +1,13 @@
 extends ../layout.pug 
+include ../nav.pug
 block content 
+    - const elements = [{name: "login", href: "/user/login"}, {name: "signup", href: "/user/signup"}] 
+    +navBar(elements)
     div 
         form(action="/story/create", method="POST") 
             input(name="title", type="text", placeholder="Title", required="true")
+            br
+            input(name="desc", type="text", placeholder="your description of the story", required="true")
             br
             input(name="content", type="text", placeholder="your story", required="true")
             br

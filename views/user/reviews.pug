@@ -1,0 +1,17 @@
+extends ../layout
+include ../nav.pug
+include ../story/abstractStory.pug
+include ../review/review.pug 
+block content 
+    - const elements = [{name: "home", href: "/"}]
+    +navBar(elements)
+    if !retrieved
+        p  #{message} 
+    else 
+        h3(style="text-align:center;") reviews 
+        for i in reviews 
+            +abstractStory(i.story, true)
+            +review(i, false)
+            hr
+        else
+            h3 no reviews 

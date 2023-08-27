@@ -1,7 +1,7 @@
 extends layout
 include nav.pug
 block content 
-    - const elements = [{name: "login", href: "/user/login"}, {name: "signup", href: "/user/signup"}, {name: "signout", href: "/user/signout"}]
+    - const elements = (auth) ? [{name: "about me", href: "/user/about/"+id}, {name: "my reviews", href: "user/reviews"}, {name: "edit profile", href: "/user/edit"}, {name: "signout", href: "/user/signout"}] : [{name: "login", href: "/user/login"}, {name: "signup", href: "/user/signup"}] 
     +navBar(elements)
     .story
         a.storyele(href='/story') 

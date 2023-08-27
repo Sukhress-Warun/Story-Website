@@ -1,0 +1,20 @@
+extends ../layout
+include ../nav.pug
+include ../story/abstractStory.pug
+block content 
+    - const elements = [{name: "home", href: "/"}]
+    +navBar(elements)
+    if !retrieved
+        p  #{message} 
+    else 
+        h2(style="text-align:center;")= aboutUser.name 
+        br
+        p= aboutUser.about 
+        br
+        hr
+        h3(style="text-align:center;") stories 
+        for i in aboutUser.stories 
+            +abstractStory(i, false)
+            hr
+        else
+            h3 no stories 

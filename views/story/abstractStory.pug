@@ -1,7 +1,9 @@
-mixin abstractStory(story)
+mixin abstractStory(story, author)
     div 
         a(href="/story/"+story._id)
             h3= story.title 
-        p= story.content 
+        p= story.desc 
+        p= story.averageRating + " - " + story.ratingCount
         br
-        h5(style="text-align:right;")= "-" + story.author.name
+        if author 
+            a(href="/user/about/"+story.author._id)= "-" + story.author.name

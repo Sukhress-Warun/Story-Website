@@ -69,4 +69,27 @@ ReviewSchema.statics.deleteReview = async function(reviewId){
     return response
 }
 
+ReviewSchema.statics.updateReview = async function(reviewId, rating, desc){
+    const response = {
+        updated: false,
+        message: ""
+    }
+    try{
+        const review = await this.findById(reviewId)
+        if(review === null){
+            response.message = "review doesn't exist"
+            return response
+        }
+        review.rating = rating
+        review.desc = desc
+        await review.save()
+        response.updated = true
+        response.message = "ok"
+    }
+    catch(err){
+        response.message = "server error " + err
+    }
+    return response
+}
+
 module.exports = mongoose.model('Review', ReviewSchema)

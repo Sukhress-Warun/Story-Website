@@ -19,9 +19,10 @@ router.get('/create', allowOnlyAuth, async (req, res) => {
 
 router.post('/create', allowOnlyAuth, async (req, res) => {
     let title = req.body.title
+    let desc = req.body.desc
     let content = req.body.content
     let author = req.session.user.id
-    const storyResponse = await Story.createStory(title, content, author)
+    const storyResponse = await Story.createStory(title, desc, content, author)
     if(!storyResponse.created){
         return res.render("story/create.pug",{attempted: true, message: storyResponse.message})
     }
@@ -44,19 +45,12 @@ router.get('/', async (req, res) => {
 })
 
 router.get('/:id', async (req, res) => {
+    const limit = 10
     let storyId = req.params.id
-    // * getting single story can give few reviews instead of all , but its must to give review of requesting user. to fix 2 db access required
-    const storyResponse = await Story.getStory(storyId)
-    // todo calculate avg rating efficiently , it calculates for every reqst's every review . 
-    let averageRating = 0
-    if(storyResponse.retrieved){
-        for(i = 0 ; i < storyResponse.story.reviews.length ; i++){
-            averageRating += Number(storyResponse.story.reviews[i].rating)
-        }
-        averageRating /= (storyResponse.story.reviews.length >= 1) ? storyResponse.story.reviews.length : 1
-    }
-    averageRating = averageRating.toFixed(1)
+    const storyResponse = await Story.getStory(storyId, limit)
     const userState = {
+        info: false,
+        message: "",
         auth: false,
         id: "",
         owner: false,
@@ -67,25 +61,30 @@ router.get('/:id', async (req, res) => {
         userState.auth = true
         userState.id = req.session.user.id
         if(storyResponse.retrieved){
-            if(storyResponse.story.author._id.equals(userState.id)){
-                userState.owner = true
-            }
-            else{
-                let i
-                for(i = 0 ; i < storyResponse.story.reviews.length ; i++){
-                    if(storyResponse.story.reviews[i].author._id.equals(userState.id)){
-                        userState.rated = true
-                        userState.review = storyResponse.story.reviews[i]
-                        break
+            const hasRated = await User.hasRatedStory(userState.id, storyId, true)
+            if(hasRated.info){
+                userState.info = true
+                userState.owner = hasRated.owner
+                userState.rated = hasRated.rated
+                userState.review = hasRated.review
+                if(userState.rated){
+                    let indexOfReview = -1
+                    for(let i = 0 ; i < storyResponse.story.reviews.length ; i++){
+                        if(storyResponse.story.reviews[i]._id.toString() === userState.review._id.toString()){
+                            indexOfReview = i
+                        }
+                    }
+                    if(indexOfReview !== -1){
+                        storyResponse.story.reviews.splice(indexOfReview, 1)
                     }
                 }
-                if(userState.rated){
-                    storyResponse.story.reviews.splice(i, 1)
-                }
+            }
+            else{
+                userState.message = hasRated.message
             }
         }
     }
-    return res.render("story/singleStory.pug",{retrieved: storyResponse.retrieved, message: storyResponse.message, story: storyResponse.story, averageRating: averageRating, userState: userState})
+    return res.render("story/singleStory.pug",{retrieved: storyResponse.retrieved, message: storyResponse.message, story: storyResponse.story, userState: userState})
 })
 
 module.exports = router

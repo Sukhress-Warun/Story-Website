@@ -1,0 +1,6 @@
+mixin review(comment, author)
+    div 
+        h4= comment.rating
+        p= comment.desc 
+        if author 
+            a(href="/user/about/"+comment.author._id)= "-" + comment.author.name

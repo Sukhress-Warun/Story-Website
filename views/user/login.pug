@@ -1,5 +1,8 @@
 extends ../layout.pug 
+include ../nav.pug
 block content 
+    - const elements = [{name: "login", href: "/user/login"}, {name: "signup", href: "/user/signup"}] 
+    +navBar(elements)
     div 
         form(action="/user/login", method="POST") 
             input(name="email", type="email", placeholder="Email", required="true")

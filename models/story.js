@@ -7,6 +7,10 @@ const StorySchema = new mongoose.Schema({
         type: String,
         required: true
     },
+    desc: {
+        type: String,
+        required: true
+    },
     content: {
         type: String,
         required: true
@@ -19,7 +23,15 @@ const StorySchema = new mongoose.Schema({
     reviews: [{
         type: mongoose.SchemaTypes.ObjectId,
         ref: "Review"
-    }]
+    }],
+    ratingTotal: {
+        type: Number,
+        default: 0 
+    },
+    ratingCount: {
+        type: Number,
+        default: 0
+    }
 })
 
 // hooks
@@ -28,8 +40,14 @@ StorySchema.pre('save', function(next) {
     return next();
 })
 
+// virtuals
+StorySchema.virtual('averageRating').get(function() {
+    return (averageRating = (this.ratingCount >= 1) ? this.ratingTotal / this.ratingCount : 0).toFixed(1)
+})
+
+
 // static-methods
-StorySchema.statics.createStory = async function(title, content, author){
+StorySchema.statics.createStory = async function(title, desc, content, author){
     const response = {
         created: false,
         message: "",
@@ -43,6 +61,7 @@ StorySchema.statics.createStory = async function(title, content, author){
     try{
         const story = await this.create({
             title: title,
+            desc: desc,
             content: content,
             author: author
         })
@@ -83,7 +102,7 @@ StorySchema.statics.getAllStories = async function(limit){
         message: "",
         stories: []
     }
-    const stories = await this.find({}).sort({_id: -1}).limit(limit).populate("author", "name")
+    const stories = await this.find({}, '-reviews -content').sort({_id: -1}).limit(limit).populate("author", "name _id")
     if(stories.length == 0){
         response.message = "no stories exist"
         return response
@@ -94,7 +113,7 @@ StorySchema.statics.getAllStories = async function(limit){
     return response
 }
 
-StorySchema.statics.getStory = async function(storyId){
+StorySchema.statics.getStory = async function(storyId, limit){
     const response = {
         retrieved: false,
         message: "",
@@ -106,7 +125,10 @@ StorySchema.statics.getStory = async function(storyId){
             response.message = "story doesn't exist"
             return response
         }
-        const story = await this.findById(storyId).populate("author", "name _id").populate("reviews", "-story")
+        const story = await this.findById(storyId).populate("author", "name _id")
+        story.reviews = story.reviews.slice(-limit)
+        story.reviews.reverse()
+        await story.populate("reviews", "-story")
         await story.populate("reviews.author", "name _id") 
         response.retrieved = true
         response.message = "ok"
@@ -126,7 +148,7 @@ StorySchema.statics.getStory = async function(storyId){
 }
 
 // * if more users try to submit then , more failures would occur 
-StorySchema.statics.addReview = async function(storyId, reviewId){
+StorySchema.statics.addReview = async function(storyId, reviewId, rating){
     const response = {
         added: false,
         message: ""
@@ -138,8 +160,66 @@ StorySchema.statics.addReview = async function(storyId, reviewId){
             return response
         }
         story.reviews.push(reviewId)
+        story.ratingTotal += rating 
+        story.ratingCount += 1
         await story.save()
         response.added = true
+        response.message = "ok"
+    }
+    catch(err){
+        response.message = "server error " + err
+    }
+    return response 
+}
+
+StorySchema.statics.updateReview = async function(storyId, oldReview, newRating){
+    const response = {
+        updated: false,
+        message: ""
+    }
+    try{
+        const story = await this.findById(storyId)
+        if(story === null){
+            response.message = "story doesn't exist"
+            return response
+        }
+        if(story.reviews.indexOf(oldReview._id) === -1){
+            response.message = "review doesn't exist in story"
+            return response
+        }
+        story.ratingTotal -= oldReview.rating 
+        story.ratingTotal += newRating
+        await story.save()
+        response.updated = true
+        response.message = "ok"
+    }
+    catch(err){
+        response.message = "server error " + err
+    }
+    return response 
+}
+
+StorySchema.statics.deleteReview = async function(storyId, review){
+    const response = {
+        deleted: false,
+        message: ""
+    }
+    try{
+        const story = await this.findById(storyId)
+        if(story === null){
+            response.message = "story doesn't exist"
+            return response
+        }
+        let index = story.reviews.indexOf(review._id)
+        if(index === -1){
+            response.message = "review doesn't exist in story"
+            return response
+        }
+        story.ratingTotal -= review.rating 
+        story.ratingCount -= 1
+        story.reviews.splice(index, 1)
+        await story.save()
+        response.deleted = true
         response.message = "ok"
     }
     catch(err){

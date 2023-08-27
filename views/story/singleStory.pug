@@ -1,6 +1,7 @@
 extends ../layout
 include ../review/create.pug
-include review.pug
+include ../review/edit.pug
+include ../review/review.pug
 include ../nav.pug
 block content 
     - const elements = [{name: "home", href: "/"}]
@@ -9,23 +10,36 @@ block content
         p  #{message} 
     else 
         div
-            h1 #{story.title}
+            h1(style="text-align:center;") #{story.title}
+            br
+            p #{story.desc} 
             br
             p #{story.content} 
             br 
-            p Overall Rating : #{averageRating}
+            p Overall Rating : #{story.averageRating}
+            p Users Rated : #{story.ratingCount}
             br 
-            h3(style="text-align:right;")= "-" + story.author.name
+            a(href="/user/about/"+story.author._id)= "-" + story.author.name
+            hr
         if userState.auth 
-            if userState.owner 
-                p you are the author of this story so, you can't submit a review 
-            else 
-                if !userState.rated
-                    +createReview(story)
+            if userState.info 
+                if userState.owner 
+                    p(style="text-align:center;") you are the author of this story so, you can't submit a review 
                 else 
-                    h3 your review 
-                    +review(userState.review)
+                    if !userState.rated
+                        h3(style="text-align:center;") rate story
+                        +createReview(story)
+                    else 
+                        h3(style="text-align:center;") your review 
+                        +editReview(userState.review, story)
+            else 
+                p #{userState.message}
         else 
-            h3 login to submit a review
+            h3(style="text-align:center;") login to submit a review
+        hr
+        h3(style="text-align:center;") reviews
         for i in story.reviews 
-            +review(i)
+            +review(i, true)
+            hr
+        else 
+            h3 no reviews

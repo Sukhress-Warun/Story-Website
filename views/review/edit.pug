@@ -1,0 +1,14 @@
+mixin editReview(review, story)
+    div 
+        form(action="/review/"+review._id+"/story/"+story._id+"/edit", method="POST") 
+                label(for="rating") Rating 
+                select(name="rating") 
+                    for i in [5,4,3,2,1,0]
+                        option(value=""+i, selected=(i==review.rating))= i 
+                br
+                input(name="desc", type="text", placeholder="review", value=review.desc)
+                br
+                input(type="checkbox", name="delete", value="true")
+                label(for="delete") Delete
+                br
+                button(type="submit") Edit 
