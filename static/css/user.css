@@ -1,0 +1,116 @@
+/* 
+    login signup edit page css
+ */
+
+.user-form{
+    background-color: rgb(46, 45, 43);
+    width: clamp(325px, 35%, 100%);
+    min-height: 500px;
+    border-radius: 20px;
+    margin: 100px auto;
+    display: flex;
+    justify-content: center;
+    flex-flow: column nowrap;
+    align-items: center;
+    color:white;
+}
+
+.user-form>form{
+    display: flex;
+    flex-flow: column nowrap;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+}
+
+.user-form>form>input {
+    width: 90%;
+    height: 40px;
+    margin: 20px 0;
+    border-radius: 5px;
+    font-size: medium;
+    font-family: inherit;
+    padding: 0 10px;
+}
+
+.user-form>form>label {
+    color: white;
+}
+
+.user-form>form>textarea{
+    width: 90%;
+    height: 60px;
+    margin: 20px 0;
+    border-radius: 5px;
+    font-size: medium;
+    font-family: inherit;
+    padding: 0 10px;
+}
+
+textarea:focus {
+    outline: none;
+}
+
+.user-form>form>button{
+    width: 50%;
+    height: 35px;
+    margin: 20px 0;
+    border-radius: 10px;
+    font-size: medium;
+    font-family: inherit;
+    padding: 0 10px;
+}
+
+input {
+    border: none;
+}
+  
+input:focus {
+    outline: none;
+}
+
+/* 
+    about page css
+ */
+
+.user-about{
+    background-color: rgb(46, 45, 43);
+    width:  clamp(325px, 75%, 97%);
+    height: max-content;
+    margin: 30px auto;
+    color: white;
+    padding: 10px;
+    border-radius: 20px;
+}
+
+.user-about>h2, .user-about>h3{
+    text-align: center;
+    padding: 20px 0;
+}
+
+.user-about>p {
+    text-align: justify;
+    padding: 20px;
+}
+
+/* 
+    reviews page css
+ */
+
+.user-reviews{
+    background-color: rgb(46, 45, 43);
+    width:  clamp(325px, 75%, 97%);
+    height: max-content;
+    margin: 30px auto;
+    color: white;
+    border-radius: 20px;
+}
+
+.user-reviews>h2, .user-reviews>h3{
+    text-align: center;
+    padding: 20px 0;
+}
+
+.user-reviews>p {
+    padding: 20px;
+}

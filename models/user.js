@@ -220,7 +220,11 @@ UserSchema.statics.hasRatedStory = async function(userId, storyId, getReview){
                     response.rated = true
                     if(getReview){
                         user.reviews = [foundRating]
-                        await user.populate("reviews.author", "name _id")
+                        await user.populate({
+                            path: 'reviews.author',
+                            model: 'User',
+                            select: 'name _id'
+                        })
                         response.review = user.reviews[0]
                     }
                     response.info = true
@@ -338,9 +342,21 @@ UserSchema.statics.getReviews = async function (userId){
             response.message = "user doesn't exist"
             return response
         }
-        await user.populate("reviews", "-author")
-        await user.populate("reviews.story", "-content -reviews")
-        await user.populate("reviews.story.author", "name _id")
+        await user.populate({
+            path: 'reviews',
+            model: 'Review',
+            select: '-author',
+            populate: {
+                path: 'story',
+                model: 'Story',
+                select: '-content -reviews',
+                populate: {
+                    path: 'author',
+                    model: 'User',
+                    select: 'name _id'
+                }
+            } 
+        })
         user.reviews.reverse()
         response.reviews = user.reviews
         response.retrieved = true

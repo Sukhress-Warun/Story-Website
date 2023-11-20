@@ -1,0 +1,308 @@
+/*
+    abstract story css
+*/
+
+.abstract-story {
+    width: 95%;
+    background-color: rgba(0, 0, 0, 0.864);
+    color: white;
+    margin: 10px auto;
+    border-radius: 10px;
+}
+
+.abstract-story-title {
+    text-align: center;
+    padding: 5px 0;
+    text-decoration: underline;
+    margin: 5px 0;
+}
+
+.rating {
+    display: flex;
+    flex-flow: row nowrap;
+    justify-content: flex-start;
+    align-items: center;
+    height: 30px;
+    padding: 5px 30px;
+    margin: 5px 0;
+}
+
+.star , .count{
+    display: flex;
+    flex-flow: row nowrap;
+    justify-content: space-between;
+    align-items: center;
+    height: 30px;
+    text-align: justify;
+}
+
+.star > img , .count > img {
+    margin : 0 5px 0 0;
+}
+
+.star {
+    margin : 0 30px 0 0;
+}
+
+.abstract-story>p {
+    padding: 5px 25px;
+    text-align: justify;
+    margin: 5px 0;
+}
+
+.abstract-story-auth {
+    text-align: right;
+    padding: 5px 25px 10px;
+    text-decoration: underline;
+    margin: 0 0;
+}
+
+/*
+    All stories css
+*/
+
+.all-stories {
+    width: clamp(325px, 75%, 97%);
+    margin: 10px auto;
+    background-color: rgb(46, 45, 43);
+    color: white;
+    height: max-content;
+    border-radius: 20px;
+}
+
+/*
+    story form css
+*/
+
+.story-form{
+    background-color: rgb(46, 45, 43);
+    width: clamp(325px, 35%, 100%);
+    min-height: 500px;
+    border-radius: 20px;
+    margin: 100px auto;
+    display: flex;
+    justify-content: center;
+    flex-flow: column nowrap;
+    align-items: center;
+}
+
+.story-form>form{
+    display: flex;
+    flex-flow: column nowrap;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+}
+
+.story-form>form>input {
+    width: 90%;
+    height: 40px;
+    margin: 20px 0;
+    border-radius: 5px;
+    font-size: medium;
+    font-family: inherit;
+    padding: 0 10px;
+}
+
+.story-form>form>label {
+    color: white;
+}
+
+.story-form>form>textarea{
+    width: 90%;
+    margin: 20px 0;
+    border-radius: 5px;
+    font-size: medium;
+    font-family: inherit;
+    padding: 0 10px;
+}
+
+.story-form-form{
+    height: 95px;
+}
+
+.story-form-desc {
+    height: 60px;
+}
+
+textarea:focus {
+    outline: none;
+}
+
+.story-form>form>button{
+    width: 50%;
+    height: 35px;
+    margin: 20px 0;
+    border-radius: 10px;
+    font-size: medium;
+    font-family: inherit;
+    padding: 0 10px;
+}
+
+input {
+    border: none;
+}
+  
+input:focus {
+    outline: none;
+}
+
+/*
+    single story css
+*/
+
+.single-story {
+    width: clamp(325px, 75%, 97%);
+    margin: 0 auto;
+    background-color: rgb(46, 45, 43);
+    color: white;
+    height: max-content;
+    border-radius: 20px;
+}
+
+.single-story > .rating {
+    padding: 0 5%;
+}
+
+.single-story-title {
+    padding: 5px 0;
+    text-align: center;
+    margin: 10px 0;
+}
+
+.single-story-desc {
+    text-align: justify;
+    padding: 5px 5%;
+    margin: 5px 0;
+}
+
+.single-story-story {
+    text-align: justify;
+    padding: 10px 5%;
+    margin: 5px 0;
+    word-wrap: break-word;
+}
+
+.single-story-auth {
+    text-align: right;
+    padding: 5px 5% 10px;
+    text-decoration: underline;
+}
+
+/*
+    review form css
+*/
+
+.review-form {
+    background-color: rgb(46, 45, 43);
+    width: clamp(325px, 35%, 100%);
+    height: max-content;
+    border-radius: 20px;
+    margin: 20px auto;
+    display: flex;
+    justify-content: center;
+    flex-flow: column nowrap;
+    align-items: center;
+}
+
+
+.review-form>form{
+    display: flex;
+    flex-flow: column nowrap;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+}
+
+.review-form>form>input {
+    width: 90%;
+    height: 40px;
+    margin: 20px 0;
+    border-radius: 5px;
+    font-size: medium;
+    font-family: inherit;
+    padding: 0 10px;
+}
+
+.review-form>form>label {
+    color: white;
+    margin: 20px 0;
+}
+
+.review-form>form>textarea{
+    width: 90%;
+    margin: 20px 0;
+    height: 60px;
+    border-radius: 5px;
+    font-size: medium;
+    font-family: inherit;
+    padding: 0 10px;
+}
+
+textarea:focus {
+    outline: none;
+}
+
+.review-form>form>button{
+    width: 50%;
+    height: 35px;
+    margin: 20px 0;
+    border-radius: 10px;
+    font-size: medium;
+    font-family: inherit;
+    padding: 0 10px;
+}
+
+input {
+    border: none;
+}
+  
+input:focus {
+    outline: none;
+}
+
+/*
+    review css
+*/  
+
+.review-wrapper {
+    /* for single story*/
+    width: clamp(325px, 75%, 97%);
+    margin: 5px auto;
+    background-color: rgb(46, 45, 43);
+    color: white;
+    height: max-content;
+    border-radius: 20px;
+}
+
+.review-wrapper>p {
+    padding: 20px;
+}
+
+.review {
+    width: 95%;
+    background-color: rgb(71, 71, 71);
+    color: white;
+    height: max-content;
+    margin: 5px auto;
+    padding: 0 0 5px 0;
+    border-radius: 10px;
+}
+
+.review-auth {
+    padding: 5px 20px;
+    text-decoration: underline;
+    margin: 5px 0;
+}
+
+.review-rating {
+    font-weight: bold;
+    padding: 2px 30px;
+    margin: 0 0;
+}
+
+.review-desc {
+    text-align: justify;
+    padding: 5px 30px;
+    margin: 5px 0;
+}

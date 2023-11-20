@@ -1,16 +1,18 @@
 extends ../layout.pug 
 include ../nav.pug
 block content 
-    - const elements = [{name: "login", href: "/user/login"}, {name: "signup", href: "/user/signup"}] 
+    - const elements = [{name: "Home", href: "/"}, {name: "Stories", href: "/story"}, {name: "About Me", href: "/user/aboutme"}, {name: "My Reviews", href: "/user/reviews"}, {name: "Edit Profile", href: "/user/edit"}, {name: "Signout", href: "/user/signout"}]
     +navBar(elements)
-    div 
+    .story-form
         form(action="/story/create", method="POST") 
-            input(name="title", type="text", placeholder="Title", required="true")
+            input(name="title", type="text", placeholder="Title", required="true", autofocus="true")
             br
-            input(name="desc", type="text", placeholder="your description of the story", required="true")
+            textarea.story-form-desc(name="desc", placeholder="your description of the story", cols="30", rows="10", required="true")
             br
-            input(name="content", type="text", placeholder="your story", required="true")
+            textarea.story-form-story(name="content", placeholder="your story", cols="30", rows="10", required="true")
             br
-            button(type="submit") post
+            button(type="submit") Post
         if attempted  
             p(style="color:red;font-weight: bold;") #{message}
+block links
+    link(rel="stylesheet", href="/css/story-review.css")

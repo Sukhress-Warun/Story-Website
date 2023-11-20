@@ -1,5 +1,5 @@
 mixin createReview(story)
-    div 
+    div.review-form
         form(action="/review/story/"+story._id, method="POST") 
             label(for="rating") Rating 
             select(name="rating") 
@@ -10,6 +10,6 @@ mixin createReview(story)
                 option(value="1") 1  
                 option(value="0") 0  
             br
-            input(name="desc", type="text", placeholder="review", required="true")
+            textarea(name="desc", cols="30", rows="10", placeholder="review", required="true")
             br
             button(type="submit") Rate 

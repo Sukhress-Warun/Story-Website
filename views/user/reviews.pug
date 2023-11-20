@@ -3,15 +3,20 @@ include ../nav.pug
 include ../story/abstractStory.pug
 include ../review/review.pug 
 block content 
-    - const elements = [{name: "home", href: "/"}]
+    - const elements = [{name: "Home", href: "/"}, {name: "Stories", href: "/story"}, {name: "About Me", href: "/user/aboutme"},{name: "My Reviews", href: "/user/reviews"}, {name: "Edit Profile", href: "/user/edit"}, {name: "Signout", href: "/user/signout"}]
     +navBar(elements)
     if !retrieved
-        p  #{message} 
+        .user-reviews 
+            p  #{message} 
     else 
-        h3(style="text-align:center;") reviews 
-        for i in reviews 
-            +abstractStory(i.story, true)
-            +review(i, false)
-            hr
-        else
-            h3 no reviews 
+        .user-reviews
+            h3(style="text-align:center;") Reviews 
+            for i in reviews 
+                +abstractStory(i.story, true)
+                +review(i, false)
+                br
+            else
+                p No Reviews 
+block links
+    link(rel="stylesheet", href="/css/user.css")
+    link(rel="stylesheet", href="/css/story-review.css")

@@ -128,8 +128,16 @@ StorySchema.statics.getStory = async function(storyId, limit){
         const story = await this.findById(storyId).populate("author", "name _id")
         story.reviews = story.reviews.slice(-limit)
         story.reviews.reverse()
-        await story.populate("reviews", "-story")
-        await story.populate("reviews.author", "name _id") 
+        await story.populate({
+            path: 'reviews',
+            model: 'Review',
+            select: '-story',
+            populate: {
+                path: 'author',
+                model: 'User',
+                select: 'name _id'
+            }
+        })
         response.retrieved = true
         response.message = "ok"
         response.story = story

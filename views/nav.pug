@@ -1,6 +1,13 @@
 mixin navBar(elements)
-    .nav 
-        for i in elements
-            .navele 
-                a(href=i.href)= i.name
-            
+    .nav-wrapper
+        .navbar
+            .branding
+                img(src='/images/logo.png' width='30px' height='30px')
+                h3 Story
+            .navLinks
+                for i in elements
+                    a(href=i.href)= i.name
+                    
+                button(type='button' onclick='menuToggle()')
+                    img(src='/images/menu.png' width='30px' height='30px')
+        #mobileMenu.display-none

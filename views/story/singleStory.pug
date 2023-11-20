@@ -4,42 +4,54 @@ include ../review/edit.pug
 include ../review/review.pug
 include ../nav.pug
 block content 
-    - const elements = [{name: "home", href: "/"}]
+    - const elements = [{name: "Home", href: "/"}, {name: "Stories", href: "/story"}].concat((userState.auth)?[{name: "About Me", href: "/user/aboutme"}, {name: "My Reviews", href: "/user/reviews"}, {name: "Edit Profile", href: "/user/edit"}, {name: "Signout", href: "/user/signout"}] : [{name: "Login", href: "/user/login"}, {name: "Signup", href: "/user/signup"}])
     +navBar(elements)
     if !retrieved
-        p  #{message} 
+        .single-story
+            br
+            p  #{message} 
+            br
     else 
-        div
-            h1(style="text-align:center;") #{story.title}
+        .single-story
+            h1.single-story-title(style="text-align:center;") #{story.title}
             br
-            p #{story.desc} 
+            p.single-story-desc #{story.desc} 
             br
-            p #{story.content} 
-            br 
-            p Overall Rating : #{story.averageRating}
-            p Users Rated : #{story.ratingCount}
-            br 
-            a(href="/user/about/"+story.author._id)= "-" + story.author.name
-            hr
+            .rating
+                .star
+                    img(src='/images/star.png' width='20px' height='20px')
+                    p= story.averageRating
+                .count    
+                    img(src='/images/user.png' width='20px' height='20px')  
+                    p= story.ratingCount
+            br
+            p.single-story-story #{story.content} 
+            br
+            a(href="/user/about/"+story.author._id)
+                h4.single-story-auth= "-" + story.author.name
         if userState.auth 
             if userState.info 
                 if userState.owner 
-                    p(style="text-align:center;") you are the author of this story so, you can't submit a review 
+                    p(style="text-align:center;") You are the author of this story so, you can't submit a review 
                 else 
                     if !userState.rated
-                        h3(style="text-align:center;") rate story
+                        h3(style="text-align:center;") Rate Story
                         +createReview(story)
                     else 
-                        h3(style="text-align:center;") your review 
+                        h3(style="text-align:center;") Your Review 
                         +editReview(userState.review, story)
             else 
                 p #{userState.message}
         else 
-            h3(style="text-align:center;") login to submit a review
-        hr
-        h3(style="text-align:center;") reviews
-        for i in story.reviews 
-            +review(i, true)
-            hr
-        else 
-            h3 no reviews
+            h3(style="text-align:center;") Login to submit a review
+        br
+        .review-wrapper
+            h3(style="text-align:center;") Other Reviews
+            for i in story.reviews 
+                +review(i, true)
+                br
+            else 
+                p No Reviews
+                br
+block links
+    link(rel="stylesheet", href="/css/story-review.css")

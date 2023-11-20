@@ -1,27 +1,35 @@
 .story{
     display: flex;
     flex-direction: row;
-    flex-wrap: nowrap;
+    flex-wrap: wrap;
     width: 100%;
-    height: 500px;
     justify-content: space-around;
+    align-items: center;
     margin: 100px 0;
 }
 
+.story-a{
+    min-height: 500px;
+    width: clamp(325px, 45%, 100%);
+}
+
 .storyele{
-    width: 45%;
-    height: 90%;
+    width: 100%;
+    min-height: 500px;
     text-align: center;
     font-weight: bold;
     color: white;
-    background-color: burlywood;
+    background-color: rgb(46, 45, 43);
+    transition: all .2s;
     position: relative;
     font-size: large;
-
+    border-radius: 20px;
+    margin: 10px 0;
 }
 
 .storyele:hover{
     color: aqua;
+    transform: scale(1.05);
 }
 
 .storyele h3{

@@ -2,12 +2,16 @@ extends ../layout
 include ../nav.pug
 include abstractStory.pug 
 block content 
-    - const elements = [{name: "home", href: "/"}]
+    - const elements = [{name: "Home", href: "/"}, {name: "Stories", href: "/story"}]
     +navBar(elements)
-    if retrieved
-        h1(style="text-align:center;") stories
-        for i in stories 
-            +abstractStory(i, true)
-            hr
-    else 
-        p #{message}
+    .all-stories
+        h1(style="text-align:center;") All Stories
+        if retrieved
+            for i in stories 
+                +abstractStory(i, true)
+                br
+        else 
+            p(style="text-align:center;") #{message}
+            br
+block links
+    link(rel="stylesheet", href="/css/story-review.css")

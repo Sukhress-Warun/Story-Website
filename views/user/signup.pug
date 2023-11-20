@@ -1,14 +1,21 @@
 extends ../layout.pug 
 include ../nav.pug
 block content 
-    - const elements = [{name: "login", href: "/user/login"}, {name: "signup", href: "/user/signup"}] 
+    - const elements = [{name: "Home", href: "/"}, {name: "Stories", href: "/story"}, {name: "Login", href: "/user/login"},  {name: "Signup", href: "/user/signup"}] 
     +navBar(elements)
-    div 
+    div.user-form
         form(action="/user/signup", method="POST") 
-            input(name="name", type="text", placeholder="Name", required="true")
-            input(name="about", type="text", placeholder="About yourself", required="true")
+            h3(style="text-align:center;") Signup
+            input(name="name", type="text", placeholder="Name", required="true", autofocus="true")
+            br
+            textarea(name="about", placeholder="About yourself", cols="40", rows="5", required="true")
+            br
             input(name="email", type="email", placeholder="Email", required="true")
+            br
             input(name="password", type="password", placeholder="Password", required="true")
-            button(type="submit") signup
+            br
+            button(type="submit") Signup
         if attempted  
             p(style="color:red;font-weight: bold;") #{message}
+block links
+    link(rel="stylesheet", href="/css/user.css")

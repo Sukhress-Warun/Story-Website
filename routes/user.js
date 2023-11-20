@@ -84,6 +84,11 @@ router.get("/about/:id", async (req, res) => {
     res.render("user/about.pug",{retrieved: userResponse.retrieved, message: userResponse.message, aboutUser: userResponse.aboutUser})
 })
 
+router.get("/aboutme", allowOnlyAuth, async (req, res) => {
+    const userResponse = await User.getAboutUser(req.session.user.id)
+    res.render("user/about.pug",{retrieved: userResponse.retrieved, message: userResponse.message, aboutUser: userResponse.aboutUser})
+})
+
 router.get("/reviews", allowOnlyAuth, async (req, res) => {
     let userId = req.session.user.id
     const userResponse = await User.getReviews(userId)

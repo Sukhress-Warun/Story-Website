@@ -1,9 +1,16 @@
 mixin abstractStory(story, author)
-    div 
+    div.abstract-story 
         a(href="/story/"+story._id)
-            h3= story.title 
+            h4.abstract-story-title= story.title 
         p= story.desc 
-        p= story.averageRating + " - " + story.ratingCount
+        .rating 
+            .star
+                img(src='/images/star.png' width='20px' height='20px')
+                p= story.averageRating
+            .count    
+                img(src='/images/user.png' width='20px' height='20px')  
+                p= story.ratingCount
         br
         if author 
-            a(href="/user/about/"+story.author._id)= "-" + story.author.name
+            a(href="/user/about/"+story.author._id)
+                h4.abstract-story-auth= "-" + story.author.name

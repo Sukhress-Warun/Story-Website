@@ -2,19 +2,26 @@ extends ../layout
 include ../nav.pug
 include ../story/abstractStory.pug
 block content 
-    - const elements = [{name: "home", href: "/"}]
+    - const elements = [{name: "Home", href: "/"}, {name: "Stories", href: "/story"}]
     +navBar(elements)
     if !retrieved
-        p  #{message} 
+        .user-about 
+            br
+            p  #{message}
+            br 
     else 
-        h2(style="text-align:center;")= aboutUser.name 
-        br
-        p= aboutUser.about 
-        br
-        hr
-        h3(style="text-align:center;") stories 
-        for i in aboutUser.stories 
-            +abstractStory(i, false)
-            hr
-        else
-            h3 no stories 
+        .user-about 
+            h2(style="text-align:center;")= aboutUser.name 
+            br
+            p= aboutUser.about 
+            br
+        .user-about
+            h3(style="text-align:center;") Stories 
+            for i in aboutUser.stories 
+                +abstractStory(i, false)
+            else
+                p No Stories 
+                br
+block links
+    link(rel="stylesheet", href="/css/user.css")
+    link(rel="stylesheet", href="/css/story-review.css")

@@ -1,17 +1,22 @@
 extends ../layout
 include ../nav.pug
 block content 
-    - const elements = [{name: "home", href: "/"}]
+    - const elements = [{name: "Home", href: "/"}, {name: "Stories", href: "/story"}, {name: "About Me", href: "/user/aboutme"}, {name: "My Reviews", href: "/user/reviews"}, {name: "Edit Profile", href: "/user/edit"}, {name: "Signout", href: "/user/signout"}]
     +navBar(elements)
-    if info
-        div 
+    div.user-form
+        if info
             form(action="/user/edit", method="POST") 
-                input(name="name", type="text", value=name, placeholder="Name")
+                input(name="name", type="text", value=name, placeholder="Name", autofocus="true")
+                br
                 input(name="about", type="text", value=about, placeholder="About yourself")
+                br
                 label(for="password") verify with password
                 input(name="password", type="password", placeholder="Password", required="true")
+                br
                 button(type="submit") Update
-        if attempted 
-            p #{attemptMessage}
-    else
-        p #{message}
+            if attempted 
+                p(style="color:white;font-weight: bold;") #{attemptMessage}
+        else
+            p #{message}
+block links
+    link(rel="stylesheet", href="/css/user.css")

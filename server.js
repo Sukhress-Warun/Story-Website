@@ -28,9 +28,10 @@ app.use(express.static(path.join(__dirname, 'static')));
 app.use(session({ 		
   secret: process.env.SECRET_KEY,
   resave: false,
-  saveUninitialized: true,
+  rolling: true,
+  saveUninitialized: false,
   cookie: {
-    maxAge: 300000
+    maxAge: 120000
   }
 }))
 
@@ -49,7 +50,7 @@ app.use('/review', review)
 
 // home route
 app.get('/', async (req, res)=>{
-  return res.render('index.pug',{auth: req.session.user !== undefined, id: ((req.session.user !== undefined) ? req.session.user.id : null)})
+  return res.render('index.pug',{auth: req.session.user !== undefined})
 })
 
 // listen on port

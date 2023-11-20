@@ -1,12 +1,14 @@
 extends layout
 include nav.pug
 block content 
-    - const elements = (auth) ? [{name: "about me", href: "/user/about/"+id}, {name: "my reviews", href: "user/reviews"}, {name: "edit profile", href: "/user/edit"}, {name: "signout", href: "/user/signout"}] : [{name: "login", href: "/user/login"}, {name: "signup", href: "/user/signup"}] 
+    - const elements = [{name: "Home", href: "/"}, {name: "Stories", href: "/story"}].concat( (auth) ? [{name: "About Me", href: "/user/aboutme"}, {name: "My Reviews", href: "/user/reviews"}, {name: "Edit Profile", href: "/user/edit"}, {name: "Signout", href: "/user/signout"}] : [{name: "Login", href: "/user/login"}, {name: "Signup", href: "/user/signup"}] )
     +navBar(elements)
     .story
-        a.storyele(href='/story') 
-            h3 View stories 
-        a.storyele(href='/story/create')
-            h3 Post Story
+        a.story-a(href='/story') 
+            div.storyele
+                h3 View Stories 
+        a.story-a(href='/story/create')
+            div.storyele
+                h3 Post Story
 block links
     link(rel="stylesheet", href="/css/index.css")
