@@ -27,12 +27,15 @@ block content
             br
             p.single-story-story #{story.content} 
             br
-            a(href="/user/about/"+story.author._id)
+            a(href="/user/"+story.author._id+"/about")
                 h4.single-story-auth= "-" + story.author.name
         if userState.auth 
             if userState.info 
                 if userState.owner 
                     p(style="text-align:center;") You are the author of this story so, you can't submit a review 
+                        br
+                        a(href="/story/"+story._id+"/edit") 
+                            b Edit Story
                 else 
                     if !userState.rated
                         h3(style="text-align:center;") Rate Story

@@ -1,5 +1,6 @@
 // packages
 const mongoose = require('mongoose')
+const bcrypt = require ('bcrypt')
 
 // schema
 const UserSchema = new mongoose.Schema({
@@ -50,6 +51,7 @@ UserSchema.statics.createUser = async function (name, about, email, password){
         return response
     }
     try{
+        password = await bcrypt.hash(password, 10)
         const user = await this.create({
             name: name,
             about: about,
@@ -77,7 +79,8 @@ UserSchema.statics.authenticate = async function (email, password) {
         response.message = "email doesn't exist"
         return response
     }
-    if(user.password !== password){
+    let result = await bcrypt.compare(password, user.password)
+    if(!result){
         response.message = "incorrect password"
         return response
     }
@@ -93,18 +96,24 @@ UserSchema.statics.getUser = async function (userId){
         message: "",
         user: null
     }
-    const user = await this.findById(userId)
-    if(user === null){
-        response.message = "user doesn't exist"
+    try{
+        const user = await this.findById(userId)
+        if(user === null){
+            response.message = "user doesn't exist"
+            return response
+        }
+        response.info = true
+        response.message = "ok"
+        response.user = {
+            name: user.name,
+            about: user.about 
+        }
         return response
     }
-    response.info = true
-    response.message = "ok"
-    response.user = {
-        name: user.name,
-        about: user.about 
+    catch(err){
+        response.message = "server error " + err
+        return response
     }
-    return response
 }
 
 UserSchema.statics.updateUser = async function (userId, name, about, password){
@@ -122,8 +131,8 @@ UserSchema.statics.updateUser = async function (userId, name, about, password){
             response.message = "user doesn't exist"
             return response
         }
-        
-        if(user.password !== password){
+        let result = await bcrypt.compare(password, user.password)
+        if(!result){
             response.info = true
             response.updateMessage = "incorrect password"
             response.name = user.name

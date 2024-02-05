@@ -12,5 +12,5 @@ mixin abstractStory(story, author)
                 p= story.ratingCount
         br
         if author 
-            a(href="/user/about/"+story.author._id)
+            a(href="/user/"+story.author._id+"/about")
                 h4.abstract-story-auth= "-" + story.author.name

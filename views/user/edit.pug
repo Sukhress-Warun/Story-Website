@@ -8,7 +8,7 @@ block content
             form(action="/user/edit", method="POST") 
                 input(name="name", type="text", value=name, placeholder="Name", autofocus="true")
                 br
-                input(name="about", type="text", value=about, placeholder="About yourself")
+                textarea(name="about", placeholder="About yourself", cols="40", rows="5", required="true")= about
                 br
                 label(for="password") verify with password
                 input(name="password", type="password", placeholder="Password", required="true")

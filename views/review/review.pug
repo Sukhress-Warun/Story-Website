@@ -1,7 +1,7 @@
 mixin review(comment, author)
     div.review
         if author 
-            a(href="/user/about/"+comment.author._id)
+            a(href="/user/"+comment.author._id+"/about")
                 h3.review-auth= comment.author.name
         h4.review-rating= comment.rating
         p.review-desc= comment.desc 

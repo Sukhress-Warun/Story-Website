@@ -13,7 +13,7 @@ const Review = require('../models/review')
 const {allowOnlyAuth} = require('../sessions')
 
 // routes /review/
-router.post('/story/:id', allowOnlyAuth, async (req, res) => {
+router.post('/story/:id/create', allowOnlyAuth, async (req, res) => {
     let storyId = req.params.id
     let userId = req.session.user.id
     const hasRated = await User.hasRatedStory(userId, storyId, false)
@@ -25,6 +25,9 @@ router.post('/story/:id', allowOnlyAuth, async (req, res) => {
 
     // eligible
     let desc = req.body.desc
+    if(isNaN(req.body.rating)){
+        return res.redirect('/story/' + storyId)
+    }
     let rating = Number(req.body.rating)
     const reviewResponse = await Review.createReview(storyId, userId, rating, desc)
     // console.log(reviewResponse)
@@ -80,6 +83,9 @@ router.post('/:reviewId/story/:storyId/edit', allowOnlyAuth, async (req, res) =>
     let deleteReview = Boolean(req.body.delete)
     if(!deleteReview){
         let desc = req.body.desc
+        if(isNaN(req.body.rating)){
+            return res.redirect('/story/' + storyId)
+        }
         let rating = Number(req.body.rating)
         const reviewResponse = await Review.updateReview(reviewId, rating, desc)
         if(!reviewResponse.updated){

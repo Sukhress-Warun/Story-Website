@@ -1,6 +1,6 @@
 mixin createReview(story)
     div.review-form
-        form(action="/review/story/"+story._id, method="POST") 
+        form(action="/review/story/"+story._id+"/create", method="POST") 
             label(for="rating") Rating 
             select(name="rating") 
                 option(value="5", selected= true) 5 

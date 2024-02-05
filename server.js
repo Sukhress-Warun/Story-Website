@@ -9,6 +9,9 @@ const bodyParser = require('body-parser')
 const pug = require('pug')
 const path = require('path')
 
+// utilities
+const {clearDatabase, loadDatabase} = require('./databaseUtility.js')
+
 // constants
 const app = express()
 
@@ -16,7 +19,15 @@ const app = express()
 mongoose.connect(process.env.DATABASE_URL, { useNewUrlParser: true })
 const db = mongoose.connection
 db.on('error', (error) => console.error(error))
-db.once('open', () => console.log('Connected to Database'))
+db.once('open', async () => {
+  console.log('Connected to Database')
+  if(process.env.CLEAR_DATABASE_ON_START === 'true'){
+    await clearDatabase()
+    if(process.env.LOAD_DATABASE_ON_START === 'true'){
+      await loadDatabase()
+    }
+  }
+})
 
 // app settings
 app.set('view engine', 'pug')
@@ -31,7 +42,7 @@ app.use(session({
   rolling: true,
   saveUninitialized: false,
   cookie: {
-    maxAge: 120000
+    maxAge: 300000
   }
 }))
 
@@ -42,11 +53,13 @@ app.use(session({
 const user = require('./routes/user')
 const story = require('./routes/story')
 const review = require('./routes/review')
+const api = require('./routes/api')
 
 // adding routes
 app.use('/user', user)
 app.use('/story', story)
 app.use('/review', review)
+app.use('/api', api)
 
 // home route
 app.get('/', async (req, res)=>{

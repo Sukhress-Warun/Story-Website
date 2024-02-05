@@ -79,7 +79,7 @@ router.post("/edit", allowOnlyAuth, async (req, res) => {
     res.render("user/edit.pug",{info: userResponse.info, message: userResponse.message, name: userResponse.name, about: userResponse.about, attempted: true, attemptMessage: userResponse.updateMessage})
 })
 
-router.get("/about/:id", async (req, res) => {
+router.get("/:id/about", async (req, res) => {
     const userResponse = await User.getAboutUser(req.params.id)
     res.render("user/about.pug",{retrieved: userResponse.retrieved, message: userResponse.message, aboutUser: userResponse.aboutUser})
 })

@@ -38,8 +38,39 @@ router.post('/create', allowOnlyAuth, async (req, res) => {
     return res.redirect("/story/" + storyResponse.id)
 })
 
+router.get('/:id/edit', allowOnlyAuth, async (req, res) => {
+    let storyId = req.params.id
+    let author = req.session.user.id
+    let storyResponse = await Story.getStoryContent(storyId)
+    if(!storyResponse.info){
+        return res.render("story/edit.pug",{info: storyResponse.info, message: storyResponse.message})
+    }
+    if(storyResponse.story.author.toString() !== author.toString()){
+        return res.render("story/edit.pug",{info: false, message: "you are not the owner of this story"})
+    }
+    return res.render("story/edit.pug",{info: storyResponse.info, message: storyResponse.message, story: storyResponse.story, attempted: false, attemptMessage: ""})
+})
+
+
+router.post('/:id/edit', allowOnlyAuth, async (req, res) => {
+    let storyId = req.params.id
+    let title = req.body.title
+    let desc = req.body.desc
+    let content = req.body.content
+    let author = req.session.user.id
+    const storyInfo = await Story.getStoryContent(storyId)
+    if(!storyInfo.info){
+        return res.render("story/edit.pug",{info: storyInfo.info, message: storyInfo.message})
+    }
+    if(storyInfo.story.author.toString() !== author.toString()){
+        return res.render("story/edit.pug",{info: false, message: "you are not the owner of this story"})
+    }
+    const storyResponse = await Story.updateStory(storyId, title, desc, content, author)
+    return res.render("story/edit.pug",{info: storyResponse.info, message: storyResponse.message, story: storyResponse.story, attempted: true, attemptMessage: storyResponse.updateMessage})
+})
+
 router.get('/', async (req, res) => {
-    const limit = 10
+    const limit = 100
     const storiesResponse = await Story.getAllStories(limit)
     return res.render("story/allStories.pug",{retrieved: storiesResponse.retrieved, stories: storiesResponse.stories, message: storiesResponse.message})
 })
@@ -72,6 +103,7 @@ router.get('/:id', async (req, res) => {
                     for(let i = 0 ; i < storyResponse.story.reviews.length ; i++){
                         if(storyResponse.story.reviews[i]._id.toString() === userState.review._id.toString()){
                             indexOfReview = i
+                            break
                         }
                     }
                     if(indexOfReview !== -1){

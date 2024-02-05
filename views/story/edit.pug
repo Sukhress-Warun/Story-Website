@@ -1,0 +1,21 @@
+extends ../layout.pug 
+include ../nav.pug
+block content 
+    - const elements = [{name: "Home", href: "/"}, {name: "Stories", href: "/story"}, {name: "About Me", href: "/user/aboutme"}, {name: "My Reviews", href: "/user/reviews"}, {name: "Edit Profile", href: "/user/edit"}, {name: "Signout", href: "/user/signout"}]
+    +navBar(elements)
+    .story-form
+        if info
+            form(action="/story/"+story._id+"/edit", method="POST") 
+                input(name="title", type="text", value=story.title, placeholder="Title", required="true", autofocus="true")
+                br
+                textarea.story-form-desc(name="desc", placeholder="your description of the story", cols="30", rows="10", required="true")= story.desc
+                br
+                textarea.story-form-story(name="content", placeholder="your story", cols="30", rows="10", required="true")= story.content
+                br
+                button(type="submit") Update Story
+                if attempted 
+                    p(style="color:white;font-weight: bold;") #{attemptMessage}
+        else 
+            p(style="color:red;font-weight: bold;") #{message}
+block links
+    link(rel="stylesheet", href="/css/story-review.css")

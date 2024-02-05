@@ -75,6 +75,55 @@ StorySchema.statics.createStory = async function(title, desc, content, author){
     return response
 }
 
+
+StorySchema.statics.updateStory = async function (storyId, title, desc, content){
+    const response = {
+        info: false,
+        message: "",
+        updated: false,
+        updateMessage: "",
+        story: null
+    }
+    try{
+        const story = await this.findById(storyId)
+        if(story === null){
+            response.message = "story doesn't exist"
+            return response
+        }
+        let changed = false
+        if(title.trim() !== "" && story.title != title){
+            story.title = title
+            changed = true
+        }
+        if(desc.trim() !== "" && story.desc != desc){
+            story.desc = desc
+            changed = true
+        }
+        if(content.trim() !== "" && story.content != content){
+            story.content = content
+            changed = true
+        }
+        if(changed){
+            await story.save()
+            response.info = true
+            response.updated = true
+            response.updateMessage = "changed successfully"
+            response.story = story
+            return response
+        }
+        else{
+            response.info = true
+            response.updateMessage = "not changed"
+            response.story = story
+            return response
+        }
+    }
+    catch(err){
+        response.message = "server error " + err
+        return response
+    }
+}
+
 StorySchema.statics.deleteStory = async function(storyId){
     const response = {
         deleted: false,
@@ -139,6 +188,36 @@ StorySchema.statics.getStory = async function(storyId, limit){
             }
         })
         response.retrieved = true
+        response.message = "ok"
+        response.story = story
+        return response
+    }
+    catch(err){
+        if(err.name === "CastError"){
+            response.message = "invalid id"
+            return response
+        }
+        else{
+            response.message = "server error " + err
+            return response
+        }
+    }
+}
+
+
+StorySchema.statics.getStoryContent = async function (storyId){
+    const response = {
+        info: false,
+        message: "",
+        story: null
+    }
+    try{
+        const story = await this.findById(storyId)
+        if(story === null){
+            response.message = "story doesn't exist"
+            return response
+        }
+        response.info = true
         response.message = "ok"
         response.story = story
         return response
