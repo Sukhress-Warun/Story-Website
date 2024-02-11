@@ -19,7 +19,7 @@
     text-align: center;
     font-weight: bold;
     color: white;
-    background-color: rgb(46, 45, 43);
+    background-color: rgba(0, 0, 0, 0.864);
     transition: all .2s;
     position: relative;
     font-size: large;

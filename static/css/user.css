@@ -74,7 +74,7 @@ input:focus {
  */
 
 .user-about{
-    background-color: rgb(46, 45, 43);
+    background-color: rgba(0, 0, 0, 0.864);
     width:  clamp(325px, 75%, 97%);
     height: max-content;
     margin: 30px auto;
@@ -91,6 +91,16 @@ input:focus {
 .user-about>p {
     text-align: justify;
     padding: 20px;
+}
+
+.user-about-stories{
+    background-color: rgb(46, 45, 43);
+    width:  clamp(325px, 75%, 97%);
+    height: max-content;
+    margin: 30px auto;
+    color: white;
+    padding: 10px;
+    border-radius: 20px;
 }
 
 /* 

@@ -3,5 +3,9 @@ mixin review(comment, author)
         if author 
             a(href="/user/"+comment.author._id+"/about")
                 h3.review-auth= comment.author.name
-        h4.review-rating= comment.rating
+        .rating
+            .star
+                - for (var i = 0; i < comment.rating; ++i) {
+                    img(src='/images/star.png' width='20px' height='20px')
+                - }
         p.review-desc= comment.desc 

@@ -2,7 +2,7 @@ extends ../layout
 include ../nav.pug
 include abstractStory.pug 
 block content 
-    - const elements = [{name: "Home", href: "/"}, {name: "Stories", href: "/story"}]
+    - const elements = [{name: "Home", href: "/"}, {name: "Stories", href: "/story", current: true}]
     +navBar(elements)
     .all-stories
         h1(style="text-align:center;") All Stories

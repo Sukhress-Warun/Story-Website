@@ -3,7 +3,7 @@ include ../nav.pug
 include ../story/abstractStory.pug
 include ../review/review.pug 
 block content 
-    - const elements = [{name: "Home", href: "/"}, {name: "Stories", href: "/story"}, {name: "About Me", href: "/user/aboutme"},{name: "My Reviews", href: "/user/reviews"}, {name: "Edit Profile", href: "/user/edit"}, {name: "Signout", href: "/user/signout"}]
+    - const elements = [{name: "Home", href: "/"}, {name: "Stories", href: "/story"}, {name: "About Me", href: "/user/aboutme"},{name: "My Reviews", href: "/user/reviews", current: true}, {name: "Edit Profile", href: "/user/edit"}, {name: "Signout", href: "/user/signout"}]
     +navBar(elements)
     if !retrieved
         .user-reviews 

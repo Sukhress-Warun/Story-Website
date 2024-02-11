@@ -69,6 +69,10 @@ a, a:hover, a:focus, a:active {
     transition: all .5s;
 }
 
+a.underlined{
+    text-decoration: underline;
+}
+
 .navLinks  >a:hover{
     color: aqua;
     outline: thin solid aqua;

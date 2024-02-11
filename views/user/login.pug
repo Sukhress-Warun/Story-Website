@@ -1,7 +1,7 @@
 extends ../layout.pug 
 include ../nav.pug
 block content 
-    - const elements = [{name: "Home", href: "/"}, {name: "Stories", href: "/story"}, {name: "Login", href: "/user/login"}, {name: "Signup", href: "/user/signup"}] 
+    - const elements = [{name: "Home", href: "/"}, {name: "Stories", href: "/story"}, {name: "Login", href: "/user/login", current: true}, {name: "Signup", href: "/user/signup"}] 
     +navBar(elements)
     div.user-form 
         h3(style="text-align:center;") Login

@@ -6,8 +6,10 @@ mixin navBar(elements)
                 h3 Story
             .navLinks
                 for i in elements
-                    a(href=i.href)= i.name
-                    
+                    if(i.current)
+                        a(href=i.href, class="underlined")= i.name
+                    else 
+                        a(href=i.href)= i.name
                 button(type='button' onclick='menuToggle()')
                     img(src='/images/menu.png' width='30px' height='30px')
         #mobileMenu.display-none

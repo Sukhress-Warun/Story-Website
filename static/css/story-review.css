@@ -154,7 +154,7 @@ input:focus {
 .single-story {
     width: clamp(325px, 75%, 97%);
     margin: 0 auto;
-    background-color: rgb(46, 45, 43);
+    background-color: rgba(0, 0, 0, 0.864);
     color: white;
     height: max-content;
     border-radius: 20px;
@@ -281,7 +281,7 @@ input:focus {
 
 .review {
     width: 95%;
-    background-color: rgb(71, 71, 71);
+    background-color: rgba(0, 0, 0, 0.864);
     color: white;
     height: max-content;
     margin: 5px auto;
@@ -295,11 +295,6 @@ input:focus {
     margin: 5px 0;
 }
 
-.review-rating {
-    font-weight: bold;
-    padding: 2px 30px;
-    margin: 0 0;
-}
 
 .review-desc {
     text-align: justify;
