@@ -1,9 +1,10 @@
 mixin navBar(elements)
     .nav-wrapper
         .navbar
-            .branding
-                img(src='/images/logo.png' width='30px' height='30px')
-                h3 Story
+            a(href="/")
+                .branding
+                    img(src='/images/logo.png' width='30px' height='30px') 
+                    h3 Story
             .navLinks
                 for i in elements
                     if(i.current)
