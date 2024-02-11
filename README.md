@@ -1,11 +1,12 @@
 # Story Website
 
 An Website to post stories and get ratings & reviews from users.
-
+You can access a demo version of the project [here](https://story-4ii2.onrender.com/).
 ## User 
 
 - **Sign Up**: Users can create accounts by providing their Name, Email, and Password.
 - **Profile**: Users can create a profile where they can share a brief "About" section.
+- **Edit Profile**: Users can edit their Name and "About" section.
 - **Post Stories**: Authenticated users can post their own stories, including the Title, Description, and the Story content itself.
 - **View Stories**: Users can read stories posted by themselves and other authors on the platform.
 - **Rate Stories**: Users can rate stories posted by other authors, contributing to the story's Average rating and Number of ratings.
@@ -18,11 +19,14 @@ An Website to post stories and get ratings & reviews from users.
 - **Story Content**: The main body of the story, where authors can share their creative work.
 - **Average Rating**: Stories will have an average rating based on the ratings provided by other users.
 - **Number of Ratings**: The total number of ratings given to a story.
+- **Edit Stories**: Authors can edit their posted stories.
 
 ## Review 
 
 - **Rating**: Users can provide a numeric rating from 0 to 5 for stories they have read.
 - **Review**: Users can write a text comment as a review for stories they have read.
+- **Edit Reviews**: Users can modify their reviews for stories as needed.
+- **Delete Reviews**: Users can remove their reviews for stories if they choose to do so.
 
 ## Constraints
 
