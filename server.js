@@ -19,15 +19,6 @@ const app = express()
 mongoose.connect(process.env.DATABASE_URL, { useNewUrlParser: true })
 const db = mongoose.connection
 db.on('error', (error) => console.error(error))
-db.once('open', async () => {
-  console.log('Connected to Database')
-  if(process.env.CLEAR_DATABASE_ON_START === 'true'){
-    await clearDatabase()
-    if(process.env.LOAD_DATABASE_ON_START === 'true'){
-      await loadDatabase()
-    }
-  }
-})
 
 // app settings
 app.set('view engine', 'pug')
@@ -66,7 +57,17 @@ app.get('/', async (req, res)=>{
   return res.render('index.pug',{auth: req.session.user !== undefined})
 })
 
-// listen on port
-app.listen(process.env.PORT, () =>{
+
+db.once('open', async () => {
+  console.log('Connected to Database')
+  if(process.env.CLEAR_DATABASE_ON_START === 'true'){
+    await clearDatabase()
+    if(process.env.LOAD_DATABASE_ON_START === 'true'){
+      await loadDatabase()
+    }
+  }
+  // listen on port
+  app.listen(process.env.PORT, () =>{
     console.log("server started")
-});
+  });
+})
